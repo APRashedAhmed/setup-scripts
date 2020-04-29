@@ -34,13 +34,9 @@ if [ "$user_is_root" = true ]; then
     # Set vars
     prefix=/usr
     bin=/bin
-    sysconfdir=/etc/zsh
-    enable_etcdir=/etc/zsh
 else
     prefix=$local_dir
     bin=$local_dir/bin
-    sysconfdir=$local_dir/etc/zsh
-    enable_etcdir=$local_dir/etc/zsh
 fi
 
 # Check if there is already a zsh installation in the expected directory
@@ -68,7 +64,7 @@ if [[ ! -f $zsh_tar ]]; then
     wget $zsh_source -O $zsh_tar
 fi
 
-# Unzip the .xz if it doesnt exist
+# Unzip the .xz if it doesnt exist and cd there
 if [[ ! -d $zsh_root ]]; then
     # See this superuser post for the meaning of this line
     # https://superuser.com/questions/146814/unpack-tar-but-change-directory-name-to-extract-to
@@ -79,9 +75,7 @@ cd $zsh_root
 # Configure and make according to linux-from-scratch
 # http://www.linuxfromscratch.org/blfs/view/svn/postlfs/zsh.html
 ./configure --prefix=$prefix \
-            --bindir=$bin\
-            --sysconfdir=$etc \
-            --enable-etcdir=$etc
+            --bindir=$bin
 make
 
 # Now check that everything went okay
@@ -105,11 +99,11 @@ if [ "$user_is_root" = true ]; then
     # https://stackoverflow.com/questions/4598001/how-do-you-find-the-original-user-through-multiple-sudo-and-su-commands
     user=`logname`
     # Set the default shell for the user
-    su -u "chsh -s /bin/zsh $user" root
+    su -c "chsh -s /bin/zsh $user" root
     
     # Historically, things need to restart to take effect
     printf "Changed the default shell to zsh for $user. You may need to \
-restart your computer for it to take effect."
+restart your computer for it to take effect.\n"
 
 else
     # Install locally if we dont have sudo
@@ -123,5 +117,5 @@ else
 fi
 
 # Cleanup after ourselves
-cd -
+cd - > /dev/null 2>&1  		# Silence this command
 rm -rf $zsh_root $zsh_tar
