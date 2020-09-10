@@ -52,10 +52,7 @@ else
 
     # Download
     if [[ ! -f $emacs_tar ]]; then
-    	dl_dir=$HOME/Downloads
-	shopt -s expand_aliases
-	alias wgetdl="wget -P $dl_dir" 	# Send wget files to dl_dir
-	wgetdl $emacs_source -O $emacs_tar
+	wget $emacs_source -O $emacs_tar
     fi
 
     # Unzip the .xz if it doesnt exist and cd there
