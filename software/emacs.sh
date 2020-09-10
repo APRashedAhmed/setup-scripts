@@ -24,7 +24,7 @@ else
     bin=$local_dir/bin
 fi
 
-# Check if there is already a zsh installation in the expected directory
+# Check if there is already an emacs installation in the expected directory
 if [[ -f $bin/emacs ]]; then
     # Lifted from the following stackoverflow post
     # https://stackoverflow.com/questions/226703/how-do-i-prompt-for-yes-no-cancel-input-in-a-linux-shell-script
@@ -52,6 +52,9 @@ else
 
     # Download
     if [[ ! -f $emacs_tar ]]; then
+    	dl_dir=$HOME/Downloads
+	shopt -s expand_aliases
+	alias wgetdl="wget -P $dl_dir" 	# Send wget files to dl_dir
 	wgetdl $emacs_source -O $emacs_tar
     fi
 
